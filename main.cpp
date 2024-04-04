@@ -8,18 +8,21 @@
 
 #include "mie_calc.h"
 
-#ifndef M_PI
-#define M_PI (4.0*atan(1.0))
-#endif
-
 using namespace std;
 
 // r1, r2, lambda, rm1, im1, rm2, im2
 // Output: extinction, scattering
 int main(int argc, char ** argv) {
-    if (argc <= 7) {
-        cerr << "Not enough arguments provided" << endl;
-        return -1;
+    if (argc != 8) {
+        cerr << "ERROR: exactly 7 floating-point arguments must be provided\n";
+        cerr << "(1) radius of inner sphere\n";
+        cerr << "(2) radius of outer sphere\n";
+        cerr << "(3) incident light wavelength\n";
+        cerr << "(4) real part of the refractive index for the inner sphere\n";
+        cerr << "(5) imaginary part of the refractive index for the inner sphere\n";
+        cerr << "(6) real part of the refractive index for the inner sphere\n";
+        cerr << "(7) imaginary part of the refractive index for the inner sphere\n";
+        return EXIT_FAILURE;
     }
 
     double r1, r2, lambda, alpha1, alpha2, rm1, im1, rm2, im2;
@@ -36,7 +39,9 @@ int main(int argc, char ** argv) {
     alpha1 = 2.0*M_PI*r1/lambda;
     alpha2 = 2.0*M_PI*r2/lambda;
     coated_mie(alpha1, rm1, im1, alpha2, rm2, im2, k_coef);
-    cout << k_coef[0]*M_PI*r2*r2 << " " << k_coef[1]*M_PI*r2*r2 << endl;
+
+    cout << "C_ext\tC_sca\tC_abs\n";
+    cout << k_coef[0]*M_PI*r2*r2 << "\t" << k_coef[1]*M_PI*r2*r2 << "\t" << k_coef[2]*M_PI*r2*r2 << endl;
 
     return 0;
 }
